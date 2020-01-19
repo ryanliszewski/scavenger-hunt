@@ -1,4 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server-lambda'
+import lambdaPlayground from 'graphql-playground-middleware-lambda'
+
 
 // Test schema and resolvers
 const typeDefs = gql`
@@ -17,11 +19,22 @@ const server = new ApolloServer({
   resolvers,
   playground: true,
   introspection: true,
+  context: ({ event, context }) => ({
+    headers: event.headers,
+    functionName: context.functionName,
+    event,
+    context,
+  }),
 })
 
 exports.handler = server.createHandler({
   cors: {
-    origin: true,
-    credentials: true
-  }
+    origin: '*',
+    credentials: true,
+  },
+})
+
+
+exports.playgroundHandler = lambdaPlayground({
+  endpoint: '/dev/graphql'
 })

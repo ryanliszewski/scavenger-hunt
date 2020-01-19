@@ -20,6 +20,7 @@
     "@types/node": "^13.1.8",
     "apollo-server-lambda": "^2.9.16",
     "graphql": "^14.5.8",
+    "graphql-playground-middleware-lambda": "^1.7.13",
     "typescript": "^3.7.5"
   }
 }
