@@ -1,0 +1,25 @@
+{
+  "name": "scavenger-hunt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --pretty",
+    "prepackage": "npm run-script build",
+    "package": "aws cloudformation package --template-file template.yaml --output-template-file packaged-template.yaml --s3-bucket playground-graphql",
+    "predeploy": "npm run-script package",
+    "deploy": "aws cloudformation deploy --template-file packaged-template.yaml --stack-name ${npm_package_name} --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ryanliszewski/scavenger-hunt/issues"
+  },
+  "homepage": "https://github.com/ryanliszewski/scavenger-hunt#readme",
+  "dependencies": {
+    "@types/node": "^13.1.8",
+    "apollo-server-lambda": "^2.9.16",
+    "graphql": "^14.5.8",
+    "typescript": "^3.7.5"
+  }
+}
