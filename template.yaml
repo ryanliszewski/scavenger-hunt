@@ -49,19 +49,32 @@ Resources:
         Request:
           Type: Api
           Properties:
-            Path: /graphql
+            Path: {proxy+}
             Method: ANY
-    
-  FederationPlaygroundFunction: 
+  
+  HelloFunction:
     Type: AWS::Serverless::Function
+    DependsOn: FederationFunctionExecutionRole
     Properties:
-      Handler: lib/graphql.playgroundHandler
-      Events: 
+      Handler: lib/hello.handler
+      Events:
         Request:
           Type: Api
           Properties:
-            Path: /dev/graphql
+            Path: /hello
             Method: ANY
 
+  GoodbyeFunction:
+    Type: AWS::Serverless::Function
+    DependsOn: FederationFunctionExecutionRole
+    Properties:
+      Handler: lib/goodbye.handler
+      Events:
+        Request:
+          Type: Api
+          Properties:
+            Path: /goodbye
+            Method: ANY
+    
     
     

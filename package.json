@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ryanliszewski/scavenger-hunt#readme",
   "dependencies": {
+    "@apollo/gateway": "^0.11.7",
     "@types/node": "^13.1.8",
     "apollo-server-lambda": "^2.9.16",
     "graphql": "^14.5.8",

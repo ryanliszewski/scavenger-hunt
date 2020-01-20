@@ -1,38 +1,43 @@
 import { ApolloServer, gql } from 'apollo-server-lambda'
+import { ApolloGateway } from '@apollo/gateway'
 import lambdaPlayground from 'graphql-playground-middleware-lambda'
 
+const gateway = new ApolloGateway({
+  serviceList: [
+    {name: 'hello', url: 'https://o7bxii975m.execute-api.us-west-2.amazonaws.com/Prod/hello' },
+    {name: 'goodbye', url: 'https://o7bxii975m.execute-api.us-west-2.amazonaws.com/Prod/goodbye' }
+  ]
+})
 
-// Test schema and resolvers
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`
-const resolvers = {
-  Query: {
-    hello: () => 'Hello World'
-  }
+const createHandler = async () => {
+  const { schema, executor } = await gateway.load()
+
+  const server = new ApolloServer({
+    schema,
+    executor,
+    playground: true,
+    introspection: true,
+    context: ({ event, context }) => ({
+      headers: event.headers,
+      functionName: context.functionName,
+      event,
+      context,
+    }),
+  })
+
+  return server.createHandler({
+    cors: {
+      origin: '*',
+      credentials: true,
+    },
+  })
 }
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  playground: true,
-  introspection: true,
-  context: ({ event, context }) => ({
-    headers: event.headers,
-    functionName: context.functionName,
-    event,
-    context,
-  }),
-})
+exports.handler = async (event, context, callback) => {
+  const handler = await createHandler()
+  handler(event, context, callback)
+}
 
-exports.handler = server.createHandler({
-  cors: {
-    origin: '*',
-    credentials: true,
-  },
-})
 
 
 exports.playgroundHandler = lambdaPlayground({
